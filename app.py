@@ -25,6 +25,7 @@ if flat_number:
 
         st.success(f"✅ Flat {flat_number}")
         st.write(f"**Maintenance Amount:** ₹{maintenance}")
+        st.markdown("<hr style='border:2px solid #4CAF50'>", unsafe_allow_html=True)
         st.write(f"**Late Payment Interest:** ₹{interest}")
     else:
         st.error("❌ Flat number not found. Please check again.")
