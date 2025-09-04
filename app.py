@@ -11,10 +11,10 @@ URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sh
 df = pd.read_csv(URL)
 df.head()
 
-st.title("🏠 Society Maintenance Tracker (2025-2026)")
+st.title("🏠 RR Dhansiri Society Maintenance Tracker (2025-2026)")
 
 # Step 2: User Input
-flat_number = st.text_input("Enter your Flat Number (Format E.g., D-908):")
+flat_number = st.text_input("Enter your Flat Number (Format E.g., D-908):", value = "D-")
 
 if st.button("Submit"):
     if flat_number:
@@ -22,6 +22,7 @@ if st.button("Submit"):
 
         if not result.empty:
             # --- Extract main values ---
+            one_time_payment_deadline = pd.to_datetime("10-Apr-2025")
             one_time_payment_date = pd.to_datetime(result.iloc[0]["Unnamed: 11"], errors="coerce")
             total_maintenance = result.iloc[0]["Unnamed: 6"]
             discounted_maintenance = result.iloc[0]["Unnamed: 7"]
@@ -66,31 +67,61 @@ if st.button("Submit"):
             if payment_method == "One Time Full Payment":
                 st.success(f"✅ Flat {flat_number}")
 
-                st.write(f"**Total maintenance Amount (2025-2026):** ₹{total_maintenance}")
-                st.write(f"**Discounted maintenance Amount (If paid full before 10 Apr 2025):** ₹{discounted_maintenance}")
-                st.divider()
-                st.write(f"**Payment Status:** One time full payment completed for 2025-2026")
-                st.write(f"**Paid Amount:** ₹{paid_maintenance}")
-                if pd.notna(one_time_payment_date):
-                    st.write(f"**Payment date:** {one_time_payment_date.strftime('%d-%b-%Y')}")
-                st.divider()
-                st.write(f"**Any previous years balance:** ₹{previous_year_balance}")
-                st.divider()
+                if one_time_payment_date <= one_time_payment_deadline:
 
-                if str(arrear1).strip() != "" and pd.notna(arrear1_date):
-                    st.write(f"**Previous balance / late interest (1):** ₹{arrear1} paid on {arrear1_date.strftime('%d-%b-%Y')}")
-                if str(arrear2).strip() != "" and pd.notna(arrear2_date):
-                    st.write(f"**Previous balance / late interest (2):** ₹{arrear2} paid on {arrear2_date.strftime('%d-%b-%Y')}")
-                if str(arrear3).strip() != "" and pd.notna(arrear3_date):
-                    st.write(f"**Previous balance / late interest (3):** ₹{arrear3} paid on {arrear3_date.strftime('%d-%b-%Y')}")
+                    st.write(f"**Total maintenance Amount (2025-2026):** ₹{total_maintenance}")
+                    st.write(f"**Discounted maintenance Amount (If paid full before 10 Apr 2025):** ₹{discounted_maintenance}")
+                    st.divider()
+                    st.write(f"**Payment Status:** One time full payment completed for 2025-2026")
+                    st.write(f"**Paid Amount:** ₹{paid_maintenance}")
+                    if pd.notna(one_time_payment_date):
+                        st.write(f"**Payment date:** {one_time_payment_date.strftime('%d-%b-%Y')}")
+                    st.divider()
+                    st.write(f"**Any previous years balance:** ₹{previous_year_balance}")
+                    st.divider()
+    
+                    if str(arrear1).strip() != "" and pd.notna(arrear1_date):
+                        st.write(f"**Previous balance / late interest (1):** ₹{arrear1} paid on {arrear1_date.strftime('%d-%b-%Y')}")
+                    if str(arrear2).strip() != "" and pd.notna(arrear2_date):
+                        st.write(f"**Previous balance / late interest (2):** ₹{arrear2} paid on {arrear2_date.strftime('%d-%b-%Y')}")
+                    if str(arrear3).strip() != "" and pd.notna(arrear3_date):
+                        st.write(f"**Previous balance / late interest (3):** ₹{arrear3} paid on {arrear3_date.strftime('%d-%b-%Y')}")
+    
+                    st.divider()
+                    st.write(f"**Total Outstanding Balance (including current year):** ₹{total_outstanding_balance}")
+                    if total_outstanding_balance == "0.00":
+                        st.success("**All Dues Clear**")
 
-                st.divider()
-                st.write(f"**Total Outstanding Balance (including current year):** ₹{total_outstanding_balance}")
-                if total_outstanding_balance == 0.00:
-                    st.success("**All Dues Clear**")
+                else:
+                    st.write(f"**Total maintenance Amount (2025-2026):** ₹{total_maintenance}")
+                    st.write(f"**Discounted maintenance Amount (If paid full before 10 Apr 2025):** ₹{discounted_maintenance}")
+                    st.divider()
+                    st.write(f"**Payment Status:** Payment completed for 2025-2026")
+                    st.write(f"Please Note: Discounted maintenance not applicable for you, because you have missed the deadline, you have to pay full maintenance amount, if not done already.")
+                    st.write(f"**Paid Amount:** ₹{paid_maintenance}")
+                    if pd.notna(one_time_payment_date):
+                        st.write(f"**Payment date:** {one_time_payment_date.strftime('%d-%b-%Y')}")
+                    st.divider()
+                    st.write(f"**Any previous years balance:** ₹{previous_year_balance}")
+                    st.divider()
+    
+                    if str(arrear1).strip() != "" and pd.notna(arrear1_date):
+                        st.write(f"**Previous balance / late interest (1):** ₹{arrear1} paid on {arrear1_date.strftime('%d-%b-%Y')}")
+                    if str(arrear2).strip() != "" and pd.notna(arrear2_date):
+                        st.write(f"**Previous balance / late interest (2):** ₹{arrear2} paid on {arrear2_date.strftime('%d-%b-%Y')}")
+                    if str(arrear3).strip() != "" and pd.notna(arrear3_date):
+                        st.write(f"**Previous balance / late interest (3):** ₹{arrear3} paid on {arrear3_date.strftime('%d-%b-%Y')}")
+    
+                    st.divider()
+                    st.write(f"**Total Outstanding Balance (including current year):** ₹{total_outstanding_balance}")
+                    if total_outstanding_balance == "0.00":
+                        st.success("**All Dues Clear**")
 
             elif payment_method == "Installment Payment":
                 st.success(f"✅ Flat {flat_number}")
+                st.divider()
+                st.write(f"**Total maintenance Amount (2025-2026):** ₹{total_maintenance}")
+                st.write(f"**Discounted maintenance Amount (If paid full before 10 Apr 2025):** ₹{discounted_maintenance}")
                 st.divider()
                 st.write("**You opted for installment payment option**")
 
@@ -105,8 +136,9 @@ if st.button("Submit"):
                 else:
                     st.write("**First Installment not paid**")
                 st.write(f"**Late charges (First Installment):** ₹{first_inst_late_interest}")
+                st.divider()
 
-                st.markdown("<hr style='border:1px solid #4CAF50'>", unsafe_allow_html=True)
+                #st.markdown("<hr style='border:1px solid #4CAF50'>", unsafe_allow_html=True)
 
                 # Second Installment
                 if str(second_inst_paid_amt).strip() != "" and pd.notna(second_inst_payment_date):
@@ -114,8 +146,9 @@ if st.button("Submit"):
                 else:
                     st.write("**Second Installment not paid**")
                 st.write(f"**Late charges (Second Installment):** ₹{second_inst_late_interest}")
+                st.divider()
 
-                st.markdown("<hr style='border:1px solid #4CAF50'>", unsafe_allow_html=True)
+                #st.markdown("<hr style='border:1px solid #4CAF50'>", unsafe_allow_html=True)
 
                 # Third Installment
                 if str(third_inst_paid_amt).strip() != "" and pd.notna(third_inst_payment_date):
@@ -137,7 +170,7 @@ if st.button("Submit"):
                 st.divider()
 
                 st.write(f"**Total Outstanding Balance (including current year):** ₹{total_outstanding_balance}")
-                if total_outstanding_balance == 0.00:
+                if total_outstanding_balance == "0.00":
                     st.success("**All Dues Clear**")
 
             else:
@@ -146,6 +179,11 @@ if st.button("Submit"):
 
                 st.write(f"**Total maintenance Amount (2025-2026):** ₹{total_maintenance}")
                 st.write(f"**Discounted maintenance Amount (If paid full before 10 Apr 2025):** ₹{discounted_maintenance}")
+                st.divider()
+
+                st.write(f"**First Installment Amount:** ₹{first_inst_amt} (pay before **April 10**)")
+                st.write(f"**Second Installment Amount:** ₹{second_inst_amt} (pay before **August 10**)")
+                st.write(f"**Third Installment Amount:** ₹{third_inst_amt} (pay before **December 10**)")
                 st.divider()
 
                 # First Installment
