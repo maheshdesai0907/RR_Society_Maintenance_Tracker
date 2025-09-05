@@ -60,6 +60,9 @@ if st.button("Submit"):
             arrear3 = result.iloc[0]["Additional payment or \nArrears3 (₹)"]
             arrear3 = "" if pd.isna(arrear3) else arrear3
             arrear3_date = pd.to_datetime(result.iloc[0]["Paid On.1"], errors="coerce")
+            
+            waiver = result.iloc[0]["Unnamed: 34"]
+            waiver = "" if pd.isna(waiver) else waiver
 
             # --- Payment Method ---
             payment_method = result.iloc[0]["Payment Method"]
@@ -86,6 +89,10 @@ if st.button("Submit"):
                         st.write(f"**Previous balance / late interest (2):** ₹{arrear2} paid on {arrear2_date.strftime('%d-%b-%Y')}")
                     if str(arrear3).strip() != "" and pd.notna(arrear3_date):
                         st.write(f"**Previous balance / late interest (3):** ₹{arrear3} paid on {arrear3_date.strftime('%d-%b-%Y')}")
+                    
+                    st.divider()
+                    if str(waiver).strip() != "":
+                        st.write(f"**Any balance waived off (after appropriate approval):** ₹{waiver}")
     
                     st.divider()
                     st.write(f"**Total Outstanding Balance (including current year):** ₹{total_outstanding_balance}")
@@ -113,6 +120,9 @@ if st.button("Submit"):
                         st.write(f"**Previous balance / late interest (3):** ₹{arrear3} paid on {arrear3_date.strftime('%d-%b-%Y')}")
     
                     st.divider()
+                    if str(waiver).strip() != "":
+                        st.write(f"**Any balance waived off (after appropriate approval):** ₹{waiver}")
+                    st.divider()
                     st.write(f"**Total Outstanding Balance (including current year):** ₹{total_outstanding_balance}")
                     if total_outstanding_balance == "0.00":
                         st.success("**All Dues Clear**")
@@ -123,7 +133,7 @@ if st.button("Submit"):
                 st.write(f"**Total maintenance Amount (2025-2026):** ₹{total_maintenance}")
                 st.write(f"**Discounted maintenance Amount (If paid full before 10 Apr 2025):** ₹{discounted_maintenance}")
                 st.divider()
-                st.write("**You opted for installment payment option**")
+                st.write("**Installment-wise payment amount and due dates:**")
 
                 st.write(f"**First Installment Amount:** ₹{first_inst_amt} (pay before **April 10**)")
                 st.write(f"**Second Installment Amount:** ₹{second_inst_amt} (pay before **August 10**)")
@@ -168,6 +178,10 @@ if st.button("Submit"):
                 if str(arrear3).strip() != "" and pd.notna(arrear3_date):
                     st.write(f"**Previous balance / late interest (3):** ₹{arrear3} paid on {arrear3_date.strftime('%d-%b-%Y')}")
                 st.divider()
+                
+                if str(waiver).strip() != "":
+                    st.write(f"**Any balance waived off (after appropriate approval):** ₹{waiver}")
+                st.divider()
 
                 st.write(f"**Total Outstanding Balance (including current year):** ₹{total_outstanding_balance}")
                 if total_outstanding_balance == "0.00":
@@ -181,6 +195,7 @@ if st.button("Submit"):
                 st.write(f"**Discounted maintenance Amount (If paid full before 10 Apr 2025):** ₹{discounted_maintenance}")
                 st.divider()
 
+                st.write("**Installment-wise payment amount and due dates:**")
                 st.write(f"**First Installment Amount:** ₹{first_inst_amt} (pay before **April 10**)")
                 st.write(f"**Second Installment Amount:** ₹{second_inst_amt} (pay before **August 10**)")
                 st.write(f"**Third Installment Amount:** ₹{third_inst_amt} (pay before **December 10**)")
@@ -221,7 +236,13 @@ if st.button("Submit"):
                     st.write(f"**Previous balance / late interest (2):** ₹{arrear2} paid on {arrear2_date.strftime('%d-%b-%Y')}")
                 if str(arrear3).strip() != "" and pd.notna(arrear3_date):
                     st.write(f"**Previous balance / late interest (3):** ₹{arrear3} paid on {arrear3_date.strftime('%d-%b-%Y')}")
+                
                 st.divider()
+                if str(waiver).strip() != "":
+                    st.write(f"**Any balance waived off (after appropriate approval):** ₹{waiver}")
+                
+                st.divider()
+                
                 st.write(f"**Total Outstanding Balance (including current year):** ₹{total_outstanding_balance}")
 
         else:
